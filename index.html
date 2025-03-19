@@ -18,7 +18,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
         }
-        #trending-songs, #search-results {
+        #search-section, #trending-section {
             max-width: 800px;
             margin: 20px auto;
         }
@@ -27,18 +27,28 @@
             padding: 15px;
             margin: 10px 0;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            text-align: left;
         }
-        .track:hover {
-            background-color: #333333;
+        .track-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
         }
-        .track p {
-            margin: 0 0 10px 0;
+        .track-info img {
+            width: 100px;
+            height: 100px;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+        .track-info p {
+            margin: 0;
             font-size: 18px;
         }
         audio {
             width: 100%;
             max-width: 400px;
+            display: block;
+            margin: 0 auto;
         }
         #search-input {
             padding: 10px;
@@ -66,13 +76,17 @@
     </style>
 </head>
 <body>
-    <h1>Monthly Trending Songs</h1>
-    <div id="trending-songs"></div>
+    <div id="search-section">
+        <h2>Search Songs</h2>
+        <input type="text" id="search-input" placeholder="Search songs...">
+        <button id="search-button">Search</button>
+        <div id="search-results"></div>
+    </div>
 
-    <h2>Search Songs</h2>
-    <input type="text" id="search-input" placeholder="Search songs...">
-    <button id="search-button">Search</button>
-    <div id="search-results"></div>
+    <div id="trending-section">
+        <h1>Monthly Trending Songs</h1>
+        <div id="trending-songs"></div>
+    </div>
 
     <script src="app.js"></script>
 </body>
