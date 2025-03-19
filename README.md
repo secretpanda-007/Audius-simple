@@ -1,17 +1,18 @@
 # Audius Simple App
 
-This is a simple web app that uses the Audius API to display trending songs, search for tracks, and create playlists to queue music.
+This is a simple web app that uses the Audius API to display monthly trending songs, allow users to search for songs, and play tracks directly.
 
 ## Usage
 
-1. Replace `YOUR_API_KEY` and `YOUR_API_SECRET` in `script.js` with your actual Audius API key and secret.
-   - You can obtain these from your [Audius Settings page](https://audius.co/settings).
-2. Open `index.html` in a web browser to use the app.
+1. Open `index.html` in a web browser to use the app.
+2. The app uses `https://discoveryprovider2.audius.co` as the hardcoded API host.
 
-## Note on Security
+## Note
 
-This app includes the API secret in the frontend, which is not secure for production use. For a production app, you should handle write operations (like creating playlists) on a backend server to keep the API secret safe.
+- Ensure you have internet access for API requests.
+- Check your browser's console (F12) for errors if tracks don’t display.
+- The `app_name` is set to "SimpleAudiusApp" in `app.js`. Replace it with your own for production if needed.
 
 ## Deployment
 
-- This repository can be deployed directly to Vercel. Simply connect your GitHub repository to Vercel, and it will automatically serve `index.html` as the main page.
+Deploy directly to Vercel by connecting your GitHub repository. Vercel will serve `index.html` as the main page.
