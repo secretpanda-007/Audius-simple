@@ -1,36 +1,12 @@
-let apiHost = null;
-
-// Function to get a list of API hosts
-async function getApiHosts() {
-    try {
-        const response = await fetch('https://api.audius.co');
-        const data = await response.json();
-        return data.data;
-    } catch (error) {
-        console.error('Error fetching API hosts:', error);
-        return [];
-    }
-}
-
-// Function to select a host
-async function selectHost() {
-    const hosts = await getApiHosts();
-    if (hosts.length > 0) {
-        apiHost = hosts[0]; // Select the first host
-        console.log('Selected API host:', apiHost);
-    } else {
-        console.error('No API hosts available');
-    }
-}
+// Hardcoded API host
+const apiHost = 'https://discoveryprovider2.audius.co';
 
 // Function to fetch trending tracks
 async function fetchTrendingTracks() {
-    if (!apiHost) {
-        await selectHost();
-    }
     try {
-        const response = await fetch(`${apiHost}/v1/tracks/trending?time=month&app_name=YourAppName`);
+        const response = await fetch(`${apiHost}/v1/tracks/trending?time=month&app_name=SimpleAudiusApp`);
         const data = await response.json();
+        console.log('Trending Tracks Response:', data); // Debug log
         return data.data; // Response structure: { "data": [ ... ] }
     } catch (error) {
         console.error('Error fetching trending tracks:', error);
@@ -40,13 +16,11 @@ async function fetchTrendingTracks() {
 
 // Function to fetch search results
 async function fetchSearchResults(query) {
-    if (!apiHost) {
-        await selectHost();
-    }
     try {
-        const response = await fetch(`${apiHost}/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=YourAppName`);
+        const response = await fetch(`${apiHost}/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=SimpleAudiusApp`);
         const data = await response.json();
-        return data.tracks; // Response structure: { "tracks": [ ... ] }
+        console.log('Search Results Response:', data); // Debug log
+        return data.data; // Response structure: { "data": [ ... ] }
     } catch (error) {
         console.error('Error fetching search results:', error);
         return [];
@@ -59,7 +33,7 @@ function createTrackElement(track) {
     div.innerHTML = `
         <p>${track.title} by ${track.user.name}</p>
         <audio controls>
-            <source src="${apiHost}/v1/tracks/${track.id}/stream?app_name=YourAppName" type="audio/mpeg">
+            <source src="${apiHost}/v1/tracks/${track.id}/stream?app_name=SimpleAudiusApp" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
     `;
@@ -91,9 +65,6 @@ async function displaySearchResults() {
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
-    selectHost().then(() => {
-        displayTrendingTracks();
-    });
-
+    displayTrendingTracks();
     document.getElementById('search-button').addEventListener('click', displaySearchResults);
 });
