@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audius Simple App</title>
+  <!-- Include the Audius SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@audius/sdk@latest/dist/sdk.min.js"></script>
+</head>
+<body>
+  <h1>Trending Songs</h1>
+  <div id="trending-feed"></div>
+
+  <h2>Search</h2>
+  <input type="text" id="search-input" placeholder="Search tracks...">
+  <button onclick="searchTracks(document.getElementById('search-input').value)">Search</button>
+  <div id="search-results"></div>
+
+  <h2>Create Playlist</h2>
+  <input type="text" id="playlist-name" placeholder="Playlist name">
+  <button onclick="createPlaylist(document.getElementById('playlist-name').value, selectedTrackIds)">Create Playlist</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
