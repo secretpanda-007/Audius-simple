@@ -6,7 +6,6 @@ async function fetchTrendingTracks() {
     try {
         const response = await fetch(`${apiHost}/v1/tracks/trending?time=month&app_name=SimpleAudiusApp`);
         const data = await response.json();
-        console.log('Trending Tracks Response:', data); // Debug log
         return data.data; // Response structure: { "data": [ ... ] }
     } catch (error) {
         console.error('Error fetching trending tracks:', error);
@@ -19,7 +18,6 @@ async function fetchSearchResults(query) {
     try {
         const response = await fetch(`${apiHost}/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=SimpleAudiusApp`);
         const data = await response.json();
-        console.log('Search Results Response:', data); // Debug log
         return data.data; // Response structure: { "data": [ ... ] }
     } catch (error) {
         console.error('Error fetching search results:', error);
@@ -27,12 +25,18 @@ async function fetchSearchResults(query) {
     }
 }
 
-// Function to create a track element with playback
+// Function to create a track element with playback and artwork
 function createTrackElement(track) {
     const div = document.createElement('div');
     div.className = 'track';
     div.innerHTML = `
-        <p>${track.title} by ${track.user.name}</p>
+        <div class="track-info">
+            <img src="${track.artwork['150x150']}" alt="Artwork">
+            <div>
+                <p>${track.title}</p>
+                <p>by ${track.user.name}</p>
+            </div>
+        </div>
         <audio controls>
             <source src="${apiHost}/v1/tracks/${track.id}/stream?app_name=SimpleAudiusApp" type="audio/mpeg">
             Your browser does not support the audio element.
@@ -41,12 +45,12 @@ function createTrackElement(track) {
     return div;
 }
 
-// Function to display trending tracks
+// Function to display trending tracks (limited to 15)
 async function displayTrendingTracks() {
     const tracks = await fetchTrendingTracks();
     const trendingSongsDiv = document.getElementById('trending-songs');
     trendingSongsDiv.innerHTML = '';
-    tracks.forEach(track => {
+    tracks.slice(0, 15).forEach(track => {
         const trackElement = createTrackElement(track);
         trendingSongsDiv.appendChild(trackElement);
     });
