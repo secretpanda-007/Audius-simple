@@ -1,0 +1,76 @@
+/* Play Bar Styling */
+#play-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000000;
+    color: #FFFFFF;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#play-bar button {
+    background-color: #CC66FF;
+    color: #000000;
+    border: none;
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+#play-bar span {
+    margin: 0 10px;
+}
+
+/* Queue Panel Styling */
+#queue-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background-color: #1A1A1A;
+    color: #FFFFFF;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+}
+
+#queue-panel.show {
+    transform: translateX(0);
+}
+
+#queue-panel h3 {
+    padding: 10px;
+    margin: 0;
+}
+
+#clear-queue {
+    display: block;
+    width: calc(100% - 20px);
+    margin: 10px;
+    background-color: #FF6666;
+    color: #FFFFFF;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.queue-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #333333;
+}
+
+.queue-item button {
+    background-color: #FF6666;
+    color: #FFFFFF;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
