@@ -30,6 +30,7 @@ async function fetchSearchResults(query) {
 // Function to create a track element with playback
 function createTrackElement(track) {
     const div = document.createElement('div');
+    div.className = 'track';
     div.innerHTML = `
         <p>${track.title} by ${track.user.name}</p>
         <audio controls>
