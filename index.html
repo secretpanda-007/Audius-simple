@@ -4,90 +4,450 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audius App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #000000;
-            color: #FFFFFF;
-            font-family: "Eurostile", Arial, sans-serif;
-            text-align: center;
+        :root {
+            --primary: #9333ea;
+            --primary-light: #a855f7;
+            --dark: #0f0f0f;
+            --gray-dark: #1e1e1e;
+            --gray: #374151;
+            --text: #f3f4f6;
+            --text-secondary: #9ca3af;
+        }
+        
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
         }
-        h1, h2 {
-            color: #CC66FF;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        #search-section, #trending-section {
-            max-width: 800px;
-            margin: 20px auto;
+        
+        header {
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1.25rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .track {
-            background-color: #1A1A1A;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            text-align: left;
-        }
-        .track-info {
+        
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            color: var(--primary);
         }
-        .track-info img {
-            width: 100px;
-            height: 100px;
-            margin-right: 15px;
-            border-radius: 5px;
+        
+        .logo i {
+            margin-right: 0.75rem;
         }
-        .track-info p {
-            margin: 0;
-            font-size: 18px;
-        }
-        audio {
+        
+        main {
+            max-width: 1200px;
             width: 100%;
-            max-width: 400px;
-            display: block;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+        
+        .search-wrapper {
+            position: relative;
+            max-width: 600px;
             margin: 0 auto;
         }
+        
         #search-input {
-            padding: 10px;
-            font-size: 16px;
-            width: 300px;
-            border: 2px solid #CC66FF;
-            border-radius: 5px;
-            background-color: #000000;
-            color: #FFFFFF;
-            margin-right: 10px;
+            width: 100%;
+            padding: 1rem 1.25rem;
+            padding-left: 3rem;
+            font-size: 1rem;
+            color: var(--text);
+            background-color: var(--gray-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            outline: none;
         }
+        
+        #search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.3);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+        
         #search-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #CC66FF;
-            color: #000000;
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0.5rem 1.25rem;
+            background-color: var(--primary);
+            color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 9999px;
+            font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.2s ease;
         }
+        
         #search-button:hover {
-            background-color: #FF99FF;
+            background-color: var(--primary-light);
+        }
+        
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .view-all {
+            color: var(--primary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        
+        .tracks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .track {
+            background-color: var(--gray-dark);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .track:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .track-artwork {
+            position: relative;
+            padding-top: 100%;
+        }
+        
+        .track-artwork img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .track:hover .play-overlay {
+            opacity: 1;
+        }
+        
+        .play-button {
+            width: 3.5rem;
+            height: 3.5rem;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .track-details {
+            padding: 1rem;
+        }
+        
+        .track-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .track-artist {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+        }
+        
+        .track-stats {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .track-stat {
+            display: flex;
+            align-items: center;
+            margin-right: 1rem;
+        }
+        
+        .track-stat i {
+            margin-right: 0.25rem;
+        }
+        
+        audio {
+            width: 100%;
+            height: 36px;
+            margin-top: 0.75rem;
+        }
+        
+        audio::-webkit-media-controls-panel {
+            background-color: var(--gray);
+        }
+        
+        .wave-animation {
+            display: flex;
+            align-items: center;
+            height: 15px;
+        }
+        
+        .wave-bar {
+            width: 2px;
+            height: 3px;
+            margin: 0 1px;
+            background-color: var(--primary);
+            animation: wave 1.2s ease infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { height: 3px; }
+            50% { height: 15px; }
+        }
+        
+        .wave-bar:nth-child(1) { animation-delay: 0.0s; }
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.0s; }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            
+            main {
+                padding: 1rem;
+            }
+            
+            .tracks-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tracks-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="search-section">
-        <h2>Search Songs</h2>
-        <input type="text" id="search-input" placeholder="Search songs...">
-        <button id="search-button">Search</button>
-        <div id="search-results"></div>
-    </div>
-
-    <div id="trending-section">
-        <h1>Monthly Trending Songs</h1>
-        <div id="trending-songs"></div>
-    </div>
-
+    <header>
+        <div class="logo">
+            <i class="fas fa-waveform"></i>
+            Audius
+        </div>
+        <div>
+            <i class="fas fa-ellipsis-vertical"></i>
+        </div>
+    </header>
+    
+    <main>
+        <div class="search-container">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="Search for artists, songs, or playlists...">
+                <button id="search-button">Search</button>
+            </div>
+            <div id="search-results"></div>
+        </div>
+        
+        <section>
+            <div class="section-header">
+                <h2>Trending Songs</h2>
+                <a href="#" class="view-all">View all</a>
+            </div>
+            
+            <div class="tracks-grid" id="trending-songs">
+                <!-- Sample tracks for demonstration -->
+                <div class="track">
+                    <div class="track-artwork">
+                        <img src="/api/placeholder/400/400" alt="Track artwork">
+                        <div class="play-overlay">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="track-details">
+                        <div class="track-title">Ethereal Dreams</div>
+                        <div class="track-artist">Cosmic Waves</div>
+                        <div class="track-stats">
+                            <div class="track-stat">
+                                <i class="fas fa-play"></i>
+                                12.5K
+                            </div>
+                            <div class="track-stat">
+                                <i class="fas fa-heart"></i>
+                                3.2K
+                            </div>
+                            <div class="track-stat">
+                                <i class="fas fa-comment"></i>
+                                245
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="track">
+                    <div class="track-artwork">
+                        <img src="/api/placeholder/400/400" alt="Track artwork">
+                        <div class="play-overlay">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="track-details">
+                        <div class="track-title">Midnight Groove</div>
+                        <div class="track-artist">Pulse Collective</div>
+                        <div class="track-stats">
+                            <div class="track-stat">
+                                <i class="fas fa-play"></i>
+                                8.7K
+                            </div>
+                            <div class="track-stat">
+                                <i class="fas fa-heart"></i>
+                                2.1K
+                            </div>
+                            <div class="track-stat">
+                                <i class="fas fa-comment"></i>
+                                178
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="track">
+                    <div class="track-artwork">
+                        <img src="/api/placeholder/400/400" alt="Track artwork">
+                        <div class="play-overlay">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="track-details">
+                        <div class="track-title">Azure Skies</div>
+                        <div class="track-artist">Echo Realm</div>
+                        <div class="track-stats">
+                            <div class="track-stat">
+                                <i class="fas fa-play"></i>
+                                15.3K
+                            </div>
+                            <div class="track-stat">
+                                <i class="fas fa-heart"></i>
+                                4.5K
+                            </div>
+                            <div class="track-stat">
+                                <i class="fas fa-comment"></i>
+                                312
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="track">
+                    <div class="track-artwork">
+                        <img src="/api/placeholder/400/400" alt="Track artwork">
+                        <div class="play-overlay">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="track-details">
+                        <div class="track-title">Electric Soul</div>
+                        <div class="track-artist">Neon Symphony</div>
+                        <div class="track-stats">
+                            <div class="track-stat">
+                                <i class="fas fa-play"></i>
+                                9.8K
+                            </div>
+                            <div class="track-stat">
+                                <i class="fas fa-heart"></i>
+                                2.7K
+                            </div>
+                            <div class="track-stat">
+                                <i class="fas fa-comment"></i>
+                                203
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
     <script src="app.js"></script>
 </body>
 </html>
