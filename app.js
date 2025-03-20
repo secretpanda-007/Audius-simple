@@ -1,4 +1,4 @@
-// DOM Elements
+const apiHost = 'https://discoveryprovider2.audius.co';
 const audioElement = document.getElementById('player');
 const playPauseBtn = document.getElementById('play-pause-btn');
 const prevBtn = document.getElementById('prev-btn');
@@ -9,11 +9,57 @@ const queuePanel = document.getElementById('queue-panel');
 const clearQueueBtn = document.getElementById('clear-queue');
 const queueList = document.getElementById('queue-list');
 
-// State Variables
 let queue = [];
 let currentIndex = -1;
 
-// Queue Management Functions
+async function fetchTrendingTracks() {
+    try {
+        const response = await fetch(`${apiHost}/v1/tracks/trending?time=month&app_name=SimpleAudiusApp`);
+        const data = await response.json();
+        return data.data.slice(0, 15);
+    } catch (error) {
+        console.error('Error fetching trending tracks:', error);
+        return [];
+    }
+}
+
+async function fetchSearchResults(query) {
+    try {
+        const response = await fetch(`${apiHost}/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=SimpleAudiusApp`);
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error('Error fetching search results:', error);
+        return [];
+    }
+}
+
+function createTrackElement(track) {
+    const div = document.createElement('div');
+    div.className = 'track';
+    div.innerHTML = `
+        <img src="${track.artwork['150x150']}" alt="Artwork">
+        <div class="track-info">
+            <p>${track.title}</p>
+            <p>by ${track.user.name}</p>
+        </div>
+        <button class="play-btn">Play</button>
+        <button class="add-to-queue">Add to Queue</button>
+    `;
+
+    div.querySelector('.play-btn').addEventListener('click', () => {
+        queue = [track];
+        currentIndex = 0;
+        playTrack(currentIndex);
+    });
+
+    div.querySelector('.add-to-queue').addEventListener('click', () => {
+        addToQueue(track);
+    });
+
+    return div;
+}
+
 function addToQueue(track) {
     queue.push(track);
     updateQueueUI();
@@ -53,7 +99,6 @@ function playPrevious() {
     }
 }
 
-// UI Update Functions
 function updateQueueUI() {
     queueList.innerHTML = '';
     queue.forEach((track, index) => {
@@ -63,6 +108,10 @@ function updateQueueUI() {
             <span>${track.title} by ${track.user.name}</span>
             <button class="remove-btn" data-index="${index}">Remove</button>
         `;
+        div.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-btn')) return;
+            playTrack(index);
+        });
         queueList.appendChild(div);
     });
 }
@@ -78,7 +127,6 @@ function updatePlayBar() {
     }
 }
 
-// Event Listeners
 playPauseBtn.addEventListener('click', () => {
     if (audioElement.paused && currentIndex >= 0 && currentIndex < queue.length) {
         audioElement.play();
@@ -120,36 +168,27 @@ queueList.addEventListener('click', (e) => {
     }
 });
 
-// Update Track Element Creation
-function createTrackElement(track) {
-    const div = document.createElement('div');
-    div.className = 'track';
-    div.innerHTML = `
-        <div class="track-info">
-            <img src="${track.artwork['150x150']}" alt="Artwork">
-            <div>
-                <p>${track.title}</p>
-                <p>by ${track.user.name}</p>
-            </div>
-        </div>
-        <button class="play-btn">Play</button>
-        <button class="add-to-queue">Add to Queue</button>
-    `;
-
-    div.querySelector('.play-btn').addEventListener('click', () => {
-        queue = [track];
-        currentIndex = 0;
-        playTrack(currentIndex);
+async function displayTrendingTracks() {
+    const tracks = await fetchTrendingTracks();
+    const trendingSongsDiv = document.getElementById('trending-songs');
+    trendingSongsDiv.innerHTML = '';
+    tracks.forEach(track => {
+        const trackElement = createTrackElement(track);
+        trendingSongsDiv.appendChild(trackElement);
     });
-
-    div.querySelector('.add-to-queue').addEventListener('click', () => {
-        addToQueue(track);
-    });
-
-    return div;
 }
 
-// Initialize (assuming existing displayTrendingTracks and search functionality)
+async function displaySearchResults() {
+    const query = document.getElementById('search-input').value;
+    const tracks = await fetchSearchResults(query);
+    const searchResultsDiv = document.getElementById('search-results');
+    searchResultsDiv.innerHTML = '';
+    tracks.forEach(track => {
+        const trackElement = createTrackElement(track);
+        searchResultsDiv.appendChild(trackElement);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     displayTrendingTracks();
     document.getElementById('search-button').addEventListener('click', displaySearchResults);
