@@ -1,18 +1,163 @@
-<!-- Global Play Bar -->
-<div id="play-bar">
-    <button id="prev-btn">⏮</button>
-    <button id="play-pause-btn">▶</button>
-    <button id="next-btn">⏭</button>
-    <span id="current-track-info">No track playing</span>
-    <button id="queue-toggle">Queue</button>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audius App</title>
+    <style>
+        body {
+            background-color: #000000;
+            color: #FFFFFF;
+            font-family: "Eurostile", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #CC66FF;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        #search-section, #trending-section {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .track {
+            background-color: #1A1A1A;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .track img {
+            width: 100px;
+            height: 100px;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+        .track-info {
+            flex-grow: 1;
+        }
+        .track button {
+            background-color: #CC66FF;
+            color: #000000;
+            border: none;
+            padding: 5px 10px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        #search-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+            border: 2px solid #CC66FF;
+            border-radius: 5px;
+            background-color: #000000;
+            color: #FFFFFF;
+            margin-right: 10px;
+        }
+        #search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #CC66FF;
+            color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        /* Queue Panel */
+        #queue-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+        #queue-panel.show {
+            transform: translateX(0);
+        }
+        #queue-panel h3 {
+            padding: 10px;
+            margin: 0;
+            background-color: #CC66FF;
+            color: #000000;
+        }
+        .queue-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #333333;
+        }
+        .queue-item button {
+            background-color: #FF6666;
+            color: #FFFFFF;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+        /* Play Bar */
+        #play-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #000000;
+            color: #FFFFFF;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 2px solid #CC66FF;
+        }
+        #play-bar button {
+            background-color: #CC66FF;
+            color: #000000;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        #play-bar span {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="search-section">
+        <h2>Search Songs</h2>
+        <input type="text" id="search-input" placeholder="Search songs...">
+        <button id="search-button">Search</button>
+        <div id="search-results"></div>
+    </div>
 
-<!-- Side Panel Queue -->
-<div id="queue-panel" class="hidden">
-    <h3>Queue</h3>
-    <button id="clear-queue">Clear Queue</button>
-    <div id="queue-list"></div>
-</div>
+    <div id="trending-section">
+        <h1>Monthly Trending Songs</h1>
+        <div id="trending-songs"></div>
+    </div>
 
-<!-- Hidden Audio Element -->
-<audio id="player" style="display: none;"></audio>
+    <div id="queue-panel">
+        <h3>Queue</h3>
+        <button id="clear-queue">Clear Queue</button>
+        <div id="queue-list"></div>
+    </div>
+
+    <div id="play-bar">
+        <button id="prev-btn">⏮</button>
+        <button id="play-pause-btn">▶</button>
+        <button id="next-btn">⏭</button>
+        <span id="current-track-info">No track playing</span>
+        <button id="queue-toggle">Queue</button>
+    </div>
+
+    <audio id="player" style="display: none;"></audio>
+
+    <script src="app.js"></script>
+</body>
+</html>
